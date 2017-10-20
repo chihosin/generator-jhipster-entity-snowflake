@@ -62,6 +62,7 @@ module.exports = class extends BaseGenerator {
         };
     }
 
+    // 提问题部分
     prompting() {
         questions.askForReplaceIdG.call(this);
     }
@@ -87,13 +88,10 @@ module.exports = class extends BaseGenerator {
         }
         this.auditedEntities.forEach((entityName) => {
             const entityPath = `${javaDir}domain/${entityName}.java`;
-            const lineFeed = '\n    ';
 
             const sourceStr = '@GeneratedValue(strategy = GenerationType.IDENTITY)';
-            const targetStr =
-                `@GenericGenerator(name = "sequence", strategy = "${this.packageName}.domain.id.SnowflakeIdGenerator")
-                ${lineFeed}
-                @GeneratedValue(generator = "sequence")`;
+            const targetStr = `@GenericGenerator(name = "sequence", strategy = "${this.packageName}.domain.id.SnowflakeIdGenerator")` +
+                '\n\t@GeneratedValue(generator = "sequence")';
 
             const flagImport = 'import javax.persistence.*;';
             const GenericGeneratorPackage = 'import org.hibernate.annotations.GenericGenerator;';
