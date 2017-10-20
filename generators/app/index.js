@@ -5,6 +5,7 @@ const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 
 const fs = require('fs');
+const questions = require('./questions');
 
 module.exports = class extends BaseGenerator {
     get initializing() {
@@ -62,39 +63,7 @@ module.exports = class extends BaseGenerator {
     }
 
     prompting() {
-        const prompts = [
-            {
-                type: 'list',
-                name: 'updateType',
-                message: 'so you wanner remake all your entities\' id with snowflake?',
-                choices: [{
-                    name: 'en, all',
-                    value: 'all'
-                }, {
-                    name: 'no, let me select them',
-                    value: 'selected'
-                }],
-                default: 'all'
-            },
-            {
-                when: response => response.updateType !== 'all',
-                type: 'checkbox',
-                name: 'auditedEntities',
-                message: 'select yourself, heh',
-                choices: this.existingEntityChoices,
-                default: 'none'
-            }
-        ];
-
-        const done = this.async();
-        this.prompt(prompts).then((props) => {
-            this.props = props;
-            this.updateType = props.updateType;
-            this.auditedEntities = props.auditedEntities;
-            // this.log(props)
-
-            done();
-        });
+        questions.askForReplaceIdG.call(this);
     }
 
     writing() {
