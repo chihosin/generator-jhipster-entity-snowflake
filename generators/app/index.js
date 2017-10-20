@@ -4,6 +4,8 @@ const semver = require('semver');
 const BaseGenerator = require('generator-jhipster/generators/generator-base');
 const jhipsterConstants = require('generator-jhipster/generators/generator-constants');
 
+const fs = require('fs');
+
 module.exports = class extends BaseGenerator {
     get initializing() {
         return {
@@ -16,7 +18,7 @@ module.exports = class extends BaseGenerator {
             displayLogo() {
                 // it's here to show that you can use functions from generator-jhipster
                 // this function is in: generator-jhipster/generators/generator-base.js
-                this.printJHipsterLogo();
+                // this.printJHipsterLogo();
 
                 // Have Yeoman greet the user.
                 this.log(`\nWelcome to the ${chalk.bold.yellow('JHipster entity-snowflake')} generator! ${chalk.yellow(`v${packagejs.version}\n`)}`);
@@ -27,6 +29,34 @@ module.exports = class extends BaseGenerator {
                 if (!semver.satisfies(currentJhipsterVersion, minimumJhipsterVersion)) {
                     this.warning(`\nYour generated project used an old JHipster version (${currentJhipsterVersion})... you need at least (${minimumJhipsterVersion})\n`);
                 }
+            },
+            getEntitityNames() {
+                const existingEntities = [];
+                const existingEntityChoices = [];
+                let existingEntityNames = [];
+
+                try {
+                    existingEntityNames = fs.readdirSync('.jhipster');
+                } catch (e) {
+                    this.error(`i can't find your .jhipster file`);
+                }
+
+                existingEntityNames.forEach((entry) => {
+                    if (entry.indexOf('.json') !== -1) {
+                        const entityName = entry.replace('.json', '');
+                        existingEntities.push(entityName);
+                        existingEntityChoices.push({
+                            name: entityName,
+                            value: entityName
+                        });
+                    }
+                });
+                this.existingEntities = existingEntities;
+                this.existingEntityChoices = existingEntityChoices;
+
+                if (existingEntities.length <= 0) {
+                    this.error(`i can't find any entity`);
+                }
             }
         };
     }
@@ -34,32 +64,42 @@ module.exports = class extends BaseGenerator {
     prompting() {
         const prompts = [
             {
-                type: 'input',
-                name: 'message',
-                message: 'Please put something',
-                default: 'hello world!'
+                type: 'list',
+                name: 'updateType',
+                message: `so you wanner remake all your entities' id with snowflake?`,
+                choices: [{
+                    name: 'en, all',
+                    value: 'all'
+                },
+                    {
+                        name: 'no, let me select them',
+                        value: 'selected'
+                    }
+                ],
+                default: 'all'
+            },
+            {
+                when: response => response.updateType !== 'all',
+                type: 'checkbox',
+                name: 'auditedEntities',
+                message: 'select yourself, heh',
+                choices: this.existingEntityChoices,
+                default: 'none'
             }
         ];
 
         const done = this.async();
         this.prompt(prompts).then((props) => {
             this.props = props;
-            // To access props later use this.props.someOption;
+            this.updateType = props.updateType
+            this.auditedEntities = props.auditedEntities;
+            // this.log(props)
 
             done();
         });
     }
 
     writing() {
-        // function to use directly template
-        this.template = function (source, destination) {
-            this.fs.copyTpl(
-                this.templatePath(source),
-                this.destinationPath(destination),
-                this
-            );
-        };
-
         // read config from .yo-rc.json
         this.baseName = this.jhipsterAppConfig.baseName;
         this.packageName = this.jhipsterAppConfig.packageName;
@@ -67,6 +107,7 @@ module.exports = class extends BaseGenerator {
         this.clientFramework = this.jhipsterAppConfig.clientFramework;
         this.clientPackageManager = this.jhipsterAppConfig.clientPackageManager;
         this.buildTool = this.jhipsterAppConfig.buildTool;
+
 
         // use function in generator-base.js from generator-jhipster
         this.angularAppName = this.getAngularAppName();
@@ -76,41 +117,33 @@ module.exports = class extends BaseGenerator {
         const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
         const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
 
-        // variable from questions
-        this.message = this.props.message;
-
-        // show all variables
-        this.log('\n--- some config read from config ---');
-        this.log(`baseName=${this.baseName}`);
-        this.log(`packageName=${this.packageName}`);
-        this.log(`clientFramework=${this.clientFramework}`);
-        this.log(`clientPackageManager=${this.clientPackageManager}`);
-        this.log(`buildTool=${this.buildTool}`);
-
-        this.log('\n--- some function ---');
-        this.log(`angularAppName=${this.angularAppName}`);
-
-        this.log('\n--- some const ---');
-        this.log(`javaDir=${javaDir}`);
-        this.log(`resourceDir=${resourceDir}`);
-        this.log(`webappDir=${webappDir}`);
-
-        this.log('\n--- variables from questions ---');
-        this.log(`\nmessage=${this.message}`);
-        this.log('------\n');
-
-        if (this.clientFramework === 'angular1') {
-            this.template('dummy.txt', 'dummy-angular1.txt');
+        //替换entitiy部分
+        if (this.updateType == 'all') {
+            this.auditedEntities = this.existingEntities;
         }
-        if (this.clientFramework === 'angular2') {
-            this.template('dummy.txt', 'dummy-angular2.txt');
-        }
-        if (this.buildTool === 'maven') {
-            this.template('dummy.txt', 'dummy-maven.txt');
-        }
-        if (this.buildTool === 'gradle') {
-            this.template('dummy.txt', 'dummy-gradle.txt');
-        }
+        this.auditedEntities.forEach((entityName) => {
+            let entityPath = `${javaDir}domain/${entityName}.java`;
+            let lineFeed = '\n    ';
+
+            let sourceStr = '@GeneratedValue(strategy = GenerationType.IDENTITY)';
+            let targetStr = `@GenericGenerator(name = "sequence", strategy = "${this.packageName}.domain.id.SnowflakeIdGenerator")`
+                + lineFeed
+                + `@GeneratedValue(generator = "sequence")`;
+
+            let flagImport = `import javax.persistence.*;`;
+            let GenericGeneratorPackage = `import org.hibernate.annotations.GenericGenerator;`;
+
+            let entityInfo = this.fs.read(entityPath, {defaults: ''});
+            if (entityInfo.includes(sourceStr)) {
+                this.replaceContent(entityPath, sourceStr, targetStr);
+            }
+            if (entityInfo.includes(flagImport)) {
+                this.replaceContent(entityPath, flagImport, flagImport + '\n' + GenericGeneratorPackage);
+            }
+        });
+
+        //使用模板文件
+        this.template('_SnowflakeIdGenerator.java', `${javaDir}/domain/id/SnowflakeIdGenerator.java`);
     }
 
     install() {
