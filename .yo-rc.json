@@ -1,0 +1,10 @@
+{
+  "generator-jhipster-module": {
+    "promptValues": {
+      "githubName": "Bigbug",
+      "authorName": "Bigbug Studio",
+      "authorEmail": "chihosin@icloud.com",
+      "authorUrl": "https://github.com/bigbug-studio"
+    }
+  }
+}
