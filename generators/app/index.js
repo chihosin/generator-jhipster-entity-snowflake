@@ -38,7 +38,7 @@ module.exports = class extends BaseGenerator {
                 try {
                     existingEntityNames = fs.readdirSync('.jhipster');
                 } catch (e) {
-                    this.error(`i can't find your .jhipster file`);
+                    this.error('i can\'t find your .jhipster file');
                 }
 
                 existingEntityNames.forEach((entry) => {
@@ -55,7 +55,7 @@ module.exports = class extends BaseGenerator {
                 this.existingEntityChoices = existingEntityChoices;
 
                 if (existingEntities.length <= 0) {
-                    this.error(`i can't find any entity`);
+                    this.error('i can\'t find any entity');
                 }
             }
         };
@@ -66,16 +66,14 @@ module.exports = class extends BaseGenerator {
             {
                 type: 'list',
                 name: 'updateType',
-                message: `so you wanner remake all your entities' id with snowflake?`,
+                message: 'so you wanner remake all your entities\' id with snowflake?',
                 choices: [{
                     name: 'en, all',
                     value: 'all'
-                },
-                    {
-                        name: 'no, let me select them',
-                        value: 'selected'
-                    }
-                ],
+                }, {
+                    name: 'no, let me select them',
+                    value: 'selected'
+                }],
                 default: 'all'
             },
             {
@@ -91,7 +89,7 @@ module.exports = class extends BaseGenerator {
         const done = this.async();
         this.prompt(prompts).then((props) => {
             this.props = props;
-            this.updateType = props.updateType
+            this.updateType = props.updateType;
             this.auditedEntities = props.auditedEntities;
             // this.log(props)
 
@@ -108,41 +106,41 @@ module.exports = class extends BaseGenerator {
         this.clientPackageManager = this.jhipsterAppConfig.clientPackageManager;
         this.buildTool = this.jhipsterAppConfig.buildTool;
 
-
         // use function in generator-base.js from generator-jhipster
         this.angularAppName = this.getAngularAppName();
 
         // use constants from generator-constants.js
         const javaDir = `${jhipsterConstants.SERVER_MAIN_SRC_DIR + this.packageFolder}/`;
-        const resourceDir = jhipsterConstants.SERVER_MAIN_RES_DIR;
-        const webappDir = jhipsterConstants.CLIENT_MAIN_SRC_DIR;
 
-        //替换entitiy部分
-        if (this.updateType == 'all') {
+        // 替换entitiy部分
+        if (this.updateType === 'all') {
             this.auditedEntities = this.existingEntities;
         }
         this.auditedEntities.forEach((entityName) => {
-            let entityPath = `${javaDir}domain/${entityName}.java`;
-            let lineFeed = '\n    ';
+            const entityPath = `${javaDir}domain/${entityName}.java`;
+            const lineFeed = '\n    ';
 
-            let sourceStr = '@GeneratedValue(strategy = GenerationType.IDENTITY)';
-            let targetStr = `@GenericGenerator(name = "sequence", strategy = "${this.packageName}.domain.id.SnowflakeIdGenerator")`
-                + lineFeed
-                + `@GeneratedValue(generator = "sequence")`;
+            const sourceStr = '@GeneratedValue(strategy = GenerationType.IDENTITY)';
+            const targetStr =
+                `@GenericGenerator(name = "sequence", strategy = "${this.packageName}.domain.id.SnowflakeIdGenerator")
+                ${lineFeed}
+                @GeneratedValue(generator = "sequence")`;
 
-            let flagImport = `import javax.persistence.*;`;
-            let GenericGeneratorPackage = `import org.hibernate.annotations.GenericGenerator;`;
+            const flagImport = 'import javax.persistence.*;';
+            const GenericGeneratorPackage = 'import org.hibernate.annotations.GenericGenerator;';
 
-            let entityInfo = this.fs.read(entityPath, {defaults: ''});
+            const entityInfo = this.fs.read(entityPath, {
+                defaults: ''
+            });
             if (entityInfo.includes(sourceStr)) {
                 this.replaceContent(entityPath, sourceStr, targetStr);
             }
             if (entityInfo.includes(flagImport)) {
-                this.replaceContent(entityPath, flagImport, flagImport + '\n' + GenericGeneratorPackage);
+                this.replaceContent(entityPath, flagImport, `${flagImport}\n${GenericGeneratorPackage}`);
             }
         });
 
-        //使用模板文件
+        // 使用模板文件
         this.template('_SnowflakeIdGenerator.java', `${javaDir}/domain/id/SnowflakeIdGenerator.java`);
     }
 
