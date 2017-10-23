@@ -50,19 +50,3 @@ workflows:
     jobs:
       - test:
           context: org-global
-          filters:
-            tags:
-              ignore: /^.*/
-  test_and_deploy:
-    jobs:
-      - test:
-          context: org-global
-      - deploy:
-          requires:
-            - test
-          context: org-global
-          filters:
-            tags:
-              only: /v.*/
-            branches:
-              ignore: /.*/
