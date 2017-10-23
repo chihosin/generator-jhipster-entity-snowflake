@@ -22,10 +22,13 @@ describe('JHipster generator entity-snowflake', () => {
                 .on('end', done);
         });
 
-        it('generate dummy.txt file', () => {
-            assert.file('src/main/java/com/bigbug/dummy/domain/id/SnowflakeIdGenerator.java');
-            assert.fileContent('src/main/java/com/bigbug/dummy/domain/Accound.java', 'import org.hibernate.annotations.GenericGenerator;');
-            assert.fileContent('src/main/java/com/bigbug/dummy/domain/Accound.java', '@GenericGenerator(name = "sequence", strategy = "com.bigbug.dummy.domain.id.SnowflakeIdGenerator")');
+        it('generate SnowflakeIdGenerator.java file', () => {
+            assert.file('src/main/java/org/bigbug/dummy/domain/id/SnowflakeIdGenerator.java');
+        });
+
+        it('modify Dummy.java id generator', () => {
+            assert.fileContent('src/main/java/org/bigbug/dummy/domain/Dummy.java', 'import org.hibernate.annotations.GenericGenerator;');
+            assert.fileContent('src/main/java/org/bigbug/dummy/domain/Dummy.java', '@GenericGenerator(name = "sequence", strategy = "org.bigbug.dummy.domain.id.SnowflakeIdGenerator")');
         });
     });
 });

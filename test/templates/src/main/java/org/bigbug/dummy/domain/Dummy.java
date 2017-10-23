@@ -1,19 +1,24 @@
-package com.bigbug.dummy.domain;
+package org.bigbug.dummy.domain;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.bigbug.dummy.domain.enumeration.DummyMode;
+
 /**
- * A Accound.
+ * A Dummy.
  */
 @Entity
-@Table(name = "accound")
+@Table(name = "dummy")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Accound implements Serializable {
+@Document(indexName = "dummy")
+public class Dummy implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -21,8 +26,13 @@ public class Accound implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @NotNull
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "jhi_mode")
+    private DummyMode mode;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -37,13 +47,26 @@ public class Accound implements Serializable {
         return name;
     }
 
-    public Accound name(String name) {
+    public Dummy name(String name) {
         this.name = name;
         return this;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public DummyMode getMode() {
+        return mode;
+    }
+
+    public Dummy mode(DummyMode mode) {
+        this.mode = mode;
+        return this;
+    }
+
+    public void setMode(DummyMode mode) {
+        this.mode = mode;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -55,11 +78,11 @@ public class Accound implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Accound accound = (Accound) o;
-        if (accound.getId() == null || getId() == null) {
+        Dummy dummy = (Dummy) o;
+        if (dummy.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), accound.getId());
+        return Objects.equals(getId(), dummy.getId());
     }
 
     @Override
@@ -69,9 +92,10 @@ public class Accound implements Serializable {
 
     @Override
     public String toString() {
-        return "Accound{" +
+        return "Dummy{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", mode='" + getMode() + "'" +
             "}";
     }
 }

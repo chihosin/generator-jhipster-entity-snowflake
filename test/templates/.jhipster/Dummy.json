@@ -1,0 +1,24 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "mode",
+            "fieldType": "DummyMode",
+            "fieldValues": "Test, Production"
+        }
+    ],
+    "changelogDate": "20171023064838",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "dummy",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination"
+}

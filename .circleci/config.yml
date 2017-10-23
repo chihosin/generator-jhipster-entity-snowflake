@@ -1,0 +1,59 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/node:latest
+    working_directory: ~/repo
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "package.json" }}
+        - v1-dependencies-
+    - run:
+        name: Install npm package
+        command: yarn install
+    - save_cache:
+        paths:
+          - node_modules
+        key: v1-dependencies-{{ checksum "package.json" }}
+    - run:
+        name: Unit test
+        command: yarn test
+  deploy:
+    docker:
+      - image: circleci/node:latest
+    working_directory: ~/repo
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "package.json" }}
+        - v1-dependencies-
+    - run:
+        name: Install npm package
+        command: yarn install
+    - save_cache:
+        paths:
+          - node_modules
+        key: v1-dependencies-{{ checksum "package.json" }}
+    - run:
+        name: Publish to npm repository
+        command: |
+          echo "registry=https://registry.npmjs.org/" > /home/circleci/.npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> /home/circleci/.npmrc
+          npm publish
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - test:
+          context: org-global
+      - deploy:
+          context: org-global
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/

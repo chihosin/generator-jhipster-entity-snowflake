@@ -1,12 +1,12 @@
 {
   "generator-jhipster": {
     "promptValues": {
-      "packageName": "com.bigbug.dummy"
+      "packageName": "org.bigbug.dummy"
     },
     "jhipsterVersion": "4.10.0",
     "baseName": "dummy",
-    "packageName": "com.bigbug.dummy",
-    "packageFolder": "com/bigbug/dummy",
+    "packageName": "org.bigbug.dummy",
+    "packageFolder": "org/bigbug/dummy",
     "serverPort": "8080",
     "authenticationType": "jwt",
     "hibernateCache": "hazelcast",
