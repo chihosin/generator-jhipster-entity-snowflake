@@ -11,14 +11,14 @@ jobs:
         - v1-dependencies-{{ checksum "package.json" }}
         - v1-dependencies-
     - run:
-        name: Install npm package
+        name: Install Package
         command: yarn install
     - save_cache:
         paths:
           - node_modules
         key: v1-dependencies-{{ checksum "package.json" }}
     - run:
-        name: Unit test
+        name: Unit Test
         command: yarn test
   deploy:
     docker:
@@ -31,14 +31,14 @@ jobs:
         - v1-dependencies-{{ checksum "package.json" }}
         - v1-dependencies-
     - run:
-        name: Install npm package
+        name: Install Package
         command: yarn install
     - save_cache:
         paths:
           - node_modules
         key: v1-dependencies-{{ checksum "package.json" }}
     - run:
-        name: Publish to npm repository
+        name: Publish Package
         command: |
           echo "registry=https://registry.npmjs.org/" > /home/circleci/.npmrc
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> /home/circleci/.npmrc
