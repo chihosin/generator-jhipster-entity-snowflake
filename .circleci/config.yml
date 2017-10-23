@@ -46,6 +46,10 @@ jobs:
 
 workflows:
   version: 2
+  test:
+    jobs:
+      - test:
+          context: org-global
   test_and_deploy:
     jobs:
       - test:
@@ -58,4 +62,4 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /.*/
+              only: /v.*/
