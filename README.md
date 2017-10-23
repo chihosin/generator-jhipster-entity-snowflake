@@ -1,5 +1,7 @@
 # generator-jhipster-entity-snowflake
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+[![Build Status][circle-ci-image]][circle-ci-url]
+[![NPM version][npm-image]][npm-url]
+[![Dependency Status][daviddm-image]][daviddm-url]
 > JHipster module, Snowflake ID Entity.
 
 # Introduction
@@ -44,14 +46,15 @@ npm update -g generator-jhipster-entity-snowflake
 
 # Usage
 
+Come soon.
+
 # License
 
 Apache-2.0 © [Chiho Sin](https://github.com/chihosin)
 
-
-[npm-image]: https://img.shields.io/npm/v/generator-jhipster-entity-snowflake.svg
+[npm-image]: https://badge.fury.io/js/generator-jhipster-entity-snowflake.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-entity-snowflake
-[travis-image]: https://travis-ci.org/ChihoSin/generator-jhipster-entity-snowflake.svg?branch=master
-[travis-url]: https://travis-ci.org/ChihoSin/generator-jhipster-entity-snowflake
-[daviddm-image]: https://david-dm.org/ChihoSin/generator-jhipster-entity-snowflake.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/ChihoSin/generator-jhipster-entity-snowflake
+[circle-ci-image]: https://circleci.com/gh/bigbug-studio/generator-jhipster-entity-snowflake.svg?style=svg
+[circle-ci-url]: https://circleci.com/gh/bigbug-studio/generator-jhipster-entity-snowflake
+[daviddm-image]: https://david-dm.org/bigbug-studio/generator-jhipster-entity-snowflake.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/bigbug-studio/generator-jhipster-entity-snowflake
