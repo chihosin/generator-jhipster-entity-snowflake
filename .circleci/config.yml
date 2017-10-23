@@ -46,7 +46,7 @@ jobs:
 
 workflows:
   version: 2
-  test_and_deploy:
+  test-and-deploy:
     jobs:
       - test:
           context: org-global
@@ -55,6 +55,8 @@ workflows:
               only: /.*/
       - deploy:
           context: org-global
+          requires:
+            - test
           filters:
             tags:
               only: /.*/
