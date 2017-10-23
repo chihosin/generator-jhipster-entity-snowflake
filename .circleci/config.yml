@@ -53,5 +53,10 @@ workflows:
           filters:
             tags:
               only: /.*/
+      - deploy:
+          context: org-global
+          filters:
+            tags:
+              only: /.*/
             branches:
               ignore: /.*/
