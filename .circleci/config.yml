@@ -50,3 +50,8 @@ workflows:
     jobs:
       - test:
           context: org-global
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
