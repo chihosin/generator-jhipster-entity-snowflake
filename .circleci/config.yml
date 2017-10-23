@@ -46,11 +46,13 @@ jobs:
 
 workflows:
   version: 2
-  deploy:
+  test_and_deploy:
     jobs:
       - test:
           context: org-global
       - deploy:
+          requires:
+            - test
           context: org-global
           filters:
             branches:
