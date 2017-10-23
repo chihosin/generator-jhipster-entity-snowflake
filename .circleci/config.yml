@@ -52,7 +52,7 @@ workflows:
           context: org-global
           filters:
             tags:
-            ignore: /^.*/
+              ignore: /^.*/
   test_and_deploy:
     jobs:
       - test:
@@ -62,7 +62,7 @@ workflows:
             - test
           context: org-global
           filters:
-            branches:
-              ignore: /.*/
             tags:
               only: /v.*/
+            branches:
+              ignore: /.*/
