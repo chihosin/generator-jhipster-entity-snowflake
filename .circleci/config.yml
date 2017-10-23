@@ -46,7 +46,7 @@ jobs:
 
 workflows:
   version: 2
-  test:
+  test_and_deploy:
     jobs:
       - test:
           context: org-global
