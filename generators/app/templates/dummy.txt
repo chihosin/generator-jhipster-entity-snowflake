@@ -1,3 +1,0 @@
-hello entity-snowflake!
-It's dummy.txtxx
-<%=message%>

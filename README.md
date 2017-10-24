@@ -50,7 +50,7 @@ Come soon.
 
 # License
 
-Apache-2.0 © [Chiho Sin](https://github.com/chihosin)
+Apache-2.0 © [Bigbug Studio](https://github.com/bigbug-studio)
 
 [npm-image]: https://badge.fury.io/js/generator-jhipster-entity-snowflake.svg
 [npm-url]: https://npmjs.org/package/generator-jhipster-entity-snowflake

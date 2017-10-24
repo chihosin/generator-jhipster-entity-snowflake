@@ -1,7 +1,7 @@
 {
   "name": "generator-jhipster-entity-snowflake",
-  "version": "1.0.0",
-  "description": "Snowflake ID Entity.",
+  "version": "1.0.1",
+  "description": "JHipster module, Snowflake ID Entity.",
   "keywords": [
     "yeoman-generator",
     "jhipster-module"
